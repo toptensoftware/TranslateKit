@@ -29,9 +29,9 @@ function dotnet_build(proj)
 }
 
 // Build platform editions
+dotnet_build("./Topten.TranslateKit/Topten.TranslateKit.csproj");
 dotnet_build("./Topten.TranslateToolCore/Topten.TranslateToolCore.csproj");
 dotnet_build("./Topten.TranslateTool/Topten.TranslateTool.csproj");
-dotnet_build("./Topten.TranslateKit/Topten.TranslateKit.csproj");
 
 if (bt.options.official)
 {
