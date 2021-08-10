@@ -1,0 +1,30 @@
+{
+	"Hello World!": 
+	{
+		"locations": null,
+		"contexts": null,
+		"translation": "Bonjour le monde!",
+		"machine": true
+	},
+	"Block": 
+	{
+		"locations": null,
+		"contexts": 
+		{
+			"obstruct": 
+			{
+				"locations": null,
+				"translation": "Bloquer",
+				"machine": true
+			},
+			"cube": 
+			{
+				"locations": null,
+				"translation": "le bloc",
+				"machine": true
+			}
+		},
+		"translation": "Bloquer",
+		"machine": true
+	}
+}

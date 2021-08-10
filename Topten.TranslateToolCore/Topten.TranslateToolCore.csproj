@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../buildtools/Topten.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>TranslateTool</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <TtsCodeSign>True</TtsCodeSign>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Topten.JsonKit" Version="1.1.126" />
+  </ItemGroup>
+
+</Project>

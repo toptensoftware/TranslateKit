@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "TranslateTool": {
+      "commandName": "Project",
+      "commandLineArgs": "translate --redo strings-it.json --apikey:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "workingDirectory": "C:\\Users\\Brad\\Projects\\TranslateKit"
+    }
+  }
+}

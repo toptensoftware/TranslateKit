@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../buildtools/Topten.props" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>translatekit</ToolCommandName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <TtsCodeSign>True</TtsCodeSign>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Copyright © 2014-2021 Topten Software.  All Rights Reserved</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageIcon>nuget-icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/toptensoftware/docsanity</PackageProjectUrl>
+    <PackageTags>Translation, Translator</PackageTags>
+    <Description>A simple .NET langauge translation utility.</Description>
+    <RepositoryUrl>https://github.com/toptensoftware/translatekit</RepositoryUrl>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Topten.TranslateToolCore\Topten.TranslateToolCore.csproj" />
+  </ItemGroup>
+
+</Project>
