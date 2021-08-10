@@ -1,4 +1,5 @@
-set tt=..\Topten.TranslateTool\bin\Debug\net5.0\Topten.TranslateTool.exe
+@echo off
+set tt=..\Build\Debug\Topten.TranslateTool\net5.0\Topten.TranslateTool.exe
 %tt% extract --json --t --out:extracted.json *.cs
 
 for %%F in (strings*.json) do (

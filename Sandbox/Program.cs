@@ -18,8 +18,8 @@ namespace Sandbox
             // Do stuff...
             Console.WriteLine("Hello World!".T());
 
-            Console.WriteLine("Block".T("obstruct"));
-            Console.WriteLine("Block".T("cube"));
+            Console.WriteLine("Block".T("obstruct" /* as in "obstruct" */));
+            Console.WriteLine("Block".T("cube" /* as in "a brick" */));
         }
     }
 }

@@ -7,12 +7,11 @@ using Topten.JsonKit;
 
 namespace TranslateTool
 {
-    class ListTool
+    class TrimTool
     {
         bool _showHelp;
-        bool _todo;
-        bool _done;
-        string _filename;
+        string _sourceFile;
+        string _targetFile;
 
         /// <summary>
         /// Show command line help
@@ -20,14 +19,12 @@ namespace TranslateTool
         void ShowHelp()
         {
             Program.ShowLogo();
-            Console.WriteLine("Usage: translatetool list [Options] <filename>");
+            Console.WriteLine("Usage: translatetool trim [Options] <sourcefile> <targetfile>");
             Console.WriteLine();
             Console.WriteLine("Options:");
-            Console.WriteLine("  --todo          List strings that need attention (no translation or machine == true");
-            Console.WriteLine("  --done          List strings that have been translated and checked (translated and machine == false)");
             Console.WriteLine("  --help          Show this help screen");
             Console.WriteLine();
-            Console.WriteLine("Lists strings from a translation file.");
+            Console.WriteLine("This command trims JSON file removing anything not required at runtime");
         }
 
         /// <summary>
@@ -45,23 +42,19 @@ namespace TranslateTool
                         _showHelp = true;
                         return;
 
-                    case "todo":
-                        _todo = true;
-                        return;
-
-                    case "done":
-                        _done = true;
-                        return;
-
                     default:
                         throw new InvalidOperationException(string.Format("Unknown switch '{0}'", arg));
                 }
             }
             else
             {
-                if (_filename == null)
+                if (_sourceFile == null)
                 {
-                    _filename = arg;
+                    _sourceFile = arg;
+                }
+                else if (_targetFile == null)
+                {
+                    _targetFile = arg;
                 }
                 else
                 {
@@ -82,35 +75,28 @@ namespace TranslateTool
         public int Run(string[] args)
         {
             ProcessArgs(args);
-            if (_showHelp || _filename == null)
+            if (_showHelp || _targetFile == null || _sourceFile == null)
             {
                 ShowHelp();
                 return 0;
             }
 
-            // Something to do?
-            if (!_done && !_todo)
-            {
-                Console.Error.WriteLine("Please specify either --todo or --done");
-                return 7;
-            }
+            Console.WriteLine($"Trimming {_sourceFile} to {_targetFile}");
 
             // Load source file
-            var source = Json.ParseFile<List<PhraseInfo>>(_filename);
+            var phraseList = Json.ParseFile<List<PhraseInfo>>(_sourceFile);
 
-            // Translate all untranslated phrases
-            foreach (var p in source)
+            var phraseListTrimmed = phraseList.Select(p =>
             {
-                // List it?
-                bool done = !p.Machine && p.Translation != null;
-                if ((_todo && !done) || (_done && done))
+                return new Topten.TranslateKit.PhraseInfo()
                 {
-                    if (p.Context == null)
-                        Console.WriteLine($"\"{p.Phrase}\" => \"{p.Translation}\"");
-                    else
-                        Console.WriteLine($"\"{p.Phrase}\" ({p.Context}) => \"{p.Translation}\"");
-                }
-            }
+                    Phrase = p.Phrase,
+                    Context = p.Context,
+                    Translation = p.Translation,
+                };
+            }).ToList();
+
+            Json.WriteFile(_targetFile, phraseListTrimmed);
 
             return 0;
         }

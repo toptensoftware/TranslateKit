@@ -16,6 +16,7 @@ namespace TranslateTool
         Period,
         OpenRound,
         CloseRound,
+        Comment,
         Other,
         EOF,
     }
@@ -79,16 +80,24 @@ namespace TranslateTool
                     NextChar();
                     if (_char == '/')
                     {
+                        NextChar();
+                        _sb.Length = 0;
+
                         // Single line comment
-                        while (_char != '\n' && _char!='\0')
+                        while (_char != '\n' && _char != '\0')
+                        {
+                            _sb.Append(_char);
                             NextChar();
-                        continue;
+                        }
+                        _token = Token.Comment;
+                        return;
                     }
                     if (_char == '*')
                     {
                         // Block comment
                         NextChar();
 
+                        _sb.Length = 0;
                         while (_char!='\0')
                         {
                             if (_char == '*')
@@ -97,9 +106,12 @@ namespace TranslateTool
                                 if (_char == '/')
                                 {
                                     NextChar();
-                                    break;
+                                    _token = Token.Comment;
+                                    return;
                                 }
+                                _sb.Append('*');
                             }
+                            _sb.Append(_char);
                             NextChar();
                         }
 

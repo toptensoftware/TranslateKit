@@ -2,8 +2,8 @@
   "profiles": {
     "TranslateTool": {
       "commandName": "Project",
-      "commandLineArgs": "translate --redo strings-it.json --apikey:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-      "workingDirectory": "C:\\Users\\Brad\\Projects\\TranslateKit"
+      "commandLineArgs": "trim converted.json trimmed.json",
+      "workingDirectory": "C:\\Users\\Brad\\Projects\\TranslateKit\\sandbox"
     }
   }
 }

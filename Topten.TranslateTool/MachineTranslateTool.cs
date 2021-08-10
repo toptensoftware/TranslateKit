@@ -22,7 +22,7 @@ namespace TranslateTool
         void ShowHelp()
         {
             Program.ShowLogo();
-            Console.WriteLine("Usage: TranslateTool translate [Options] <filename>");
+            Console.WriteLine("Usage: translatetool translate [Options] <filename>");
             Console.WriteLine();
             Console.WriteLine("Options:");
             Console.WriteLine("  --help          Show this help screen");
@@ -124,37 +124,16 @@ namespace TranslateTool
             Console.WriteLine($"Translating {_filename} to {_language}");
 
             // Load source file
-            var source = Json.ParseFile<Dictionary<string, Phrase>>(_filename);
+            var source = Json.ParseFile<List<PhraseInfo>>(_filename);
 
             // Translate all untranslated phrases
-            foreach (var kv in source)
+            foreach (var p in source)
             {
-                // Main term
-                if (kv.Value.Translation == null || _all || (_redo && kv.Value.Machine))
+                // Translate?
+                if (p.Translation == null || _all || (_redo && p.Machine))
                 {
-                    kv.Value.Translation = GoogleTranslate.Translate(kv.Key, _language);
-                    kv.Value.Machine = true;
-                }
-
-                // Contexts
-                if (kv.Value.Contexts != null)
-                {
-                    foreach (var context in kv.Value.Contexts)
-                    {
-                        if (context.Value.Translation == null || _all || (_redo && context.Value.Machine))
-                        {
-                            if (kv.Value.Machine)
-                            {
-                                context.Value.Translation = kv.Value.Translation;
-                                context.Value.Machine = true;
-                            }
-                            else
-                            {
-                                context.Value.Translation = GoogleTranslate.Translate(kv.Key, _language); ;
-                                context.Value.Machine = true;
-                            }
-                        }
-                    }
+                    p.Translation = GoogleTranslate.Translate(p.Phrase, _language);
+                    p.Machine = true;
                 }
             }
 

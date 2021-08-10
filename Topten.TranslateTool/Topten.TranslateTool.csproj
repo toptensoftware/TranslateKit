@@ -23,6 +23,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Topten.TranslateKit\Topten.TranslateKit.csproj" />
     <ProjectReference Include="..\Topten.TranslateToolCore\Topten.TranslateToolCore.csproj" />
   </ItemGroup>
 

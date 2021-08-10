@@ -43,7 +43,7 @@ namespace TranslateTool
         /// </summary>
         /// <param name="filename">The file to parse</param>
         /// <returns>An enumeration of ParsedStringInfo</returns>
-        public IEnumerable<ParsedStringInfo> ParseFile(string filename)
+        public IEnumerable<ParsedPhrase> ParseFile(string filename)
         {
             Tokenizer tokenizer;
             using (var streamReader = new StreamReader(filename))
@@ -63,13 +63,15 @@ namespace TranslateTool
 
                             // Should this string be included?
                             string context;
-                            if (Filter(out context))
+                            string comment;
+                            if (Filter(out context, out comment))
                             {
                                 // Yes, yield it
-                                yield return new ParsedStringInfo()
+                                yield return new ParsedPhrase()
                                 {
-                                    str = str,
-                                    context = context,
+                                    Phrase = str,
+                                    Context = context,
+                                    Comment = comment,
                                     LineNumber = tokenLine,
                                 };
                             }
@@ -83,9 +85,10 @@ namespace TranslateTool
             // Returns:
             // true if finds `.T()`
             // true if finds `.T("str")` with "str" returned via context
-            bool IsTranslatableString(out string context)
+            bool IsTranslatableString(out string context, out string comment)
             {
                 context = null;
+                comment = null;
                 tokenizer.NextToken();
                 if (tokenizer.Token == Token.Period)
                 {
@@ -99,6 +102,11 @@ namespace TranslateTool
                             if (tokenizer.Token == Token.String)
                             {
                                 context = tokenizer.String;
+                                tokenizer.NextToken();
+                            }
+                            if (tokenizer.Token == Token.Comment)
+                            {
+                                comment = tokenizer.String.Trim();
                                 tokenizer.NextToken();
                             }
                             if (tokenizer.Token == Token.CloseRound)
@@ -117,13 +125,14 @@ namespace TranslateTool
             // If looking for non-translation strings,
             //     returns true if neither .T() not .T("str") found
             // Otherwise returns false
-            bool Filter(out string context)
+            bool Filter(out string context, out string comment)
             {
                 if (_translationStrings)
-                    return IsTranslatableString(out context);
-                if (_nonTranslationStrings && !IsTranslatableString(out context))
+                    return IsTranslatableString(out context, out comment);
+                if (_nonTranslationStrings && !IsTranslatableString(out context, out comment))
                     return true;
                 context = null;
+                comment = null;
                 return false;
             }
         }

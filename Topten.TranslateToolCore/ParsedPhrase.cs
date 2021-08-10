@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace TranslateTool
 {
-    public class ParsedStringInfo
+    public class ParsedPhrase
     {
-        public string str;
-        public string context;
+        public string Phrase;
+        public string Context;
+        public string Comment;
         public int LineNumber;
     }
 }

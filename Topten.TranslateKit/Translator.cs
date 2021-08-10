@@ -20,27 +20,18 @@ namespace Topten.TranslateKit
         public static TranslateFunc CreateTranslator(string jsonFile)
         {
             // Load the phrase map
-            Dictionary<string, Phrase> phraseMap = Json.ParseFile<Dictionary<string, Phrase>>(jsonFile);
+            var phraseList = Json.ParseFile<List<PhraseInfo>>(jsonFile);
+            var phraseMap = phraseList.ToDictionary(
+                x => (x.Phrase, x.Context ?? ""),
+                x => x
+                );
+            phraseList = null;
 
             return (phrase, context) =>
             {
                 // Look up the phrase
-                if (!phraseMap.TryGetValue(phrase, out var phraseEntry))
-                    return phrase;
-
-                // Look for context version
-                if (context != null)
-                {
-                    if (phraseEntry.Contexts.TryGetValue(context, out var contextEntry))
-                    {
-                        if (contextEntry.Translation != null)
-                            return contextEntry.Translation;
-                    }
-                }
-
-                // Is there a translation?
-                if (phraseEntry.Translation != null)
-                    return phraseEntry.Translation;
+                if (phraseMap.TryGetValue((phrase, context??""), out var pi))
+                    return pi.Translation;
 
                 // Use original string
                 return phrase;

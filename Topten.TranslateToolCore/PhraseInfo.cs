@@ -6,8 +6,17 @@ using Topten.JsonKit;
 
 namespace TranslateTool
 {
-    public class PhraseContext
+    public class PhraseInfo
     {
+        [Json("phrase")]
+        public string Phrase;
+
+        [Json("context")]
+        public string Context;
+
+        [Json("comment")]
+        public string Comment;
+
         [Json("locations")]
         public List<string> Locations;
 
@@ -16,20 +25,6 @@ namespace TranslateTool
 
         [Json("machine")]
         public bool Machine;
-    }
 
-    public class Phrase
-    {
-        [Json("locations")] 
-        public List<string> Locations;
-
-        [Json("contexts")]
-        public Dictionary<string, PhraseContext> Contexts;
-
-        [Json("translation")] 
-        public string Translation;
-
-        [Json("machine")] 
-        public bool Machine;
     }
 }

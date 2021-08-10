@@ -21,7 +21,7 @@ namespace TranslateTool
         void ShowHelp()
         {
             Program.ShowLogo();
-            Console.WriteLine("Usage: TranslateTool update [Options] <sourcefile> <targetfile>");
+            Console.WriteLine("Usage: translatetool update [Options] <sourcefile> <targetfile>");
             Console.WriteLine();
             Console.WriteLine("Options:");
             Console.WriteLine("  --no-locations  Don't copy location information");
@@ -85,37 +85,6 @@ namespace TranslateTool
             }
         }
 
-        void MergeContexts(Dictionary<string, PhraseContext> target, Dictionary<string, PhraseContext> source)
-        {
-            foreach (var kv in source)
-            {
-                // Strip out locations
-                if (!_locations)
-                {
-                    kv.Value.Locations = null;
-                }
-
-                if (target.TryGetValue(kv.Key, out var targetPhraseContext))
-                {
-                    // Just update locations leave everything else alone
-                    targetPhraseContext.Locations = kv.Value.Locations;
-                }
-                else
-                {
-                    target.Add(kv.Key, kv.Value);
-                }
-            }
-
-            // Remove contexts that no longer exist
-            if (_trim)
-            {
-                foreach (var kv in target.Keys.Where(x => !source.ContainsKey(x)))
-                {
-                    target.Remove(kv);
-                }
-            }
-        }
-
         public int Run(string[] args)
         {
             ProcessArgs(args);
@@ -128,16 +97,26 @@ namespace TranslateTool
             Console.WriteLine($"Updating {_targetFile} from {_sourceFile}");
 
             // Load both files
-            var updateFrom = Json.ParseFile<Dictionary<string, Phrase>>(_sourceFile);
-            Dictionary<string, Phrase> updateTo;
+            var updateFromList= Json.ParseFile<List<PhraseInfo>>(_sourceFile);
+            List<PhraseInfo> updateToList;
             if (System.IO.File.Exists(_targetFile))
             {
-                updateTo = Json.ParseFile<Dictionary<string, Phrase>>(_targetFile);
+                updateToList= Json.ParseFile<List<PhraseInfo>>(_targetFile);
             }
             else
             {
-                updateTo = new();
+                updateToList = new();
             }
+
+            var updateTo = updateToList.ToDictionary(
+                x => (x.Phrase, x.Context ?? ""),
+                x => x
+                );
+            var updateFrom = updateFromList.ToDictionary(
+                x => (x.Phrase, x.Context ?? ""),
+                x => x
+                );
+
 
             // Remove locations from target file
             foreach (var kv in updateTo)
@@ -152,21 +131,11 @@ namespace TranslateTool
                 if (!_locations)
                     kv.Value.Locations = null;
 
-                Phrase p;
+                PhraseInfo p;
                 if (updateTo.TryGetValue(kv.Key, out p))
                 {
                     // Copy new locations
                     p.Locations = kv.Value.Locations;
-
-                    // Update contexts
-                    if (p.Contexts == null || !p.Contexts.Any())
-                    {
-                        p.Contexts = kv.Value.Contexts;
-                    }
-                    else
-                    {
-                        MergeContexts(p.Contexts, kv.Value.Contexts);
-                    }
                 }
                 else
                 {
@@ -182,7 +151,7 @@ namespace TranslateTool
                 }
             }
 
-            Json.WriteFile(_targetFile, updateTo);
+            Json.WriteFile(_targetFile, updateTo.Values);
 
             return 0;
         }

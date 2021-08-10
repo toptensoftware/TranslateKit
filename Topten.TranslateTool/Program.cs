@@ -18,13 +18,18 @@ namespace TranslateTool
 
         static void ShowHelp()
         {
-            Console.WriteLine("Usage: TranslateTool [extract|translate|<options>]");
+            Console.WriteLine("Usage: translatetool [<command>] [<options>]");
             Console.WriteLine();
+            Console.WriteLine("Commands:");
             Console.WriteLine("    extract      extracts strings from C# files");
             Console.WriteLine("    update       updates a translated file with newly extracted strings");
             Console.WriteLine("    translate    machine translates any untranslated strings");
             Console.WriteLine("    list         lists strings from a translation file");
-            Console.WriteLine("  --help         show this help");
+            Console.WriteLine("    trim         removes JSON attributes not required at runtime");
+            Console.WriteLine("    convert      converts old style JSON file to new");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            Console.WriteLine("  --help         show this help, or help for a command");
             Console.WriteLine("  --version      show version information");
         }
 
@@ -69,6 +74,14 @@ namespace TranslateTool
                 if (arg == "list")
                 {
                     return new ListTool().Run(args.Skip(1).ToArray());
+                }
+                if (arg == "convert")
+                {
+                    return new ConvertTool().Run(args.Skip(1).ToArray());
+                }
+                if (arg == "trim")
+                {
+                    return new TrimTool().Run(args.Skip(1).ToArray());
                 }
             }
 

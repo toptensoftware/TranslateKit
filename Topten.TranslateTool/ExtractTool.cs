@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Topten.JsonKit;
 
 namespace TranslateTool
 {
@@ -27,7 +28,7 @@ namespace TranslateTool
         void ShowHelp()
         {
             Program.ShowLogo();
-            Console.WriteLine("Usage: TranslateTool extract [Options] <filespec>");
+            Console.WriteLine("Usage: translatetool extract [Options] <filespec>");
             Console.WriteLine();
             Console.WriteLine("Options:");
             Console.WriteLine("  --t           Extract translatable .T() strings");
@@ -188,7 +189,7 @@ namespace TranslateTool
             try
             {
                 // Process all files
-                Dictionary<string, StringInfo> _allStrings = new Dictionary<string, StringInfo>();
+                Dictionary<(string, string), PhraseInfo> _allPhrases = new Dictionary<(string,string), PhraseInfo>();
                 int count = 0;
                 foreach (var f in files)
                 {
@@ -215,49 +216,50 @@ namespace TranslateTool
                             }
 
                             // Add string to the context
-                            if (!_allStrings.TryGetValue(s.str, out var si))
+                            if (!_allPhrases.TryGetValue((s.Phrase, s.Context ?? ""), out var p))
                             {
-                                si = new StringInfo(s.str);
-                                _allStrings.Add(s.str, si);
-                            }
+                                p = new PhraseInfo();
+                                p.Phrase = s.Phrase;
+                                p.Context = s.Context;
+                                p.Comment = s.Comment;
+                                p.Locations = new List<string>();
+                                if (_jsonLocations)
+                                    p.Locations.Add(location);
 
-                            if (s.context == null)
-                            {
-                                // Unqualified string
-                                si.locations.Add(location);
+                                _allPhrases.Add((p.Phrase, p.Context ?? ""), p);
                             }
                             else
                             {
-                                // String qualified by key
-                                List<string> locations;
-                                if (!si.contexts.TryGetValue(s.str, out locations))
-                                {
-                                    locations = new List<string>();
-                                    si.contexts.Add(s.context, locations);
-                                }
-                                locations.Add(location);
+                                if (_jsonLocations)
+                                    p.Locations.Add(location);
                             }
 
                             // Output string
-                            if (_vsFormat)
-                            {
-                                // VS Format
-                                if (s.context == null)
-                                    output.WriteLine($"{f}({s.LineNumber + 1 }): {FormatString(s.str)}");
-                                else
-                                    output.WriteLine($"{f}({s.LineNumber + 1}): {FormatString(s.str)} ({FormatString(s.context)})");
-                            }
-                            else if (_json)
+                            if (_json)
                             {
                                 // We'll write JSON format later
                             }
                             else
                             {
-                                // Just output the string
-                                if (s.context == null)
-                                    output.WriteLine($"{FormatString(s.str)}");
-                                else
-                                    output.WriteLine($"{FormatString(s.str)} ({FormatString(s.context)})");
+                                if (_vsFormat)
+                                {
+                                    // VS Format
+                                    output.Write($"{f}({s.LineNumber + 1 }): ");
+                                }
+
+                                output.Write(FormatString(s.Phrase));
+
+                                if (s.Context != null)
+                                {
+                                    output.Write($" ({FormatString(s.Context)})");
+                                }
+
+                                if (s.Comment != null)
+                                {
+                                    output.Write($" // {s.Comment}");
+                                }
+
+                                output.WriteLine();
                             }
 
                             count++;
@@ -279,48 +281,11 @@ namespace TranslateTool
                 // Output JSON format
                 if (_json)
                 {
-                    output.WriteLine("{");
-                    foreach (var kv in _allStrings)
-                    {
-                        output.WriteLine("{0}:", Tokenizer.EscapeString(kv.Key));
-                        output.WriteLine("{");
-                        if (_jsonLocations)
-                        {
-                            output.WriteLine("\t\"locations\": [");
-                            foreach (var location in kv.Value.locations.Distinct())
-                            {
-                                output.WriteLine("\t\t{0},", Tokenizer.EscapeString(location));
-                            }
-                            output.WriteLine("\t],");
-                        }
-                        if (kv.Value.contexts.Count > 0)
-                        {
-                            output.WriteLine("\t\"contexts\":");
-                            output.WriteLine("\t{");
-                            foreach (var k in kv.Value.contexts)
-                            {
-                                output.WriteLine("\t\t{0}:", Tokenizer.EscapeString(k.Key));
-                                output.WriteLine("\t\t{");
-                                if (_jsonLocations)
-                                {
-                                    output.WriteLine("\t\t\t\"locations\": [");
-                                    foreach (var location in k.Value.Distinct())
-                                    {
-                                        output.WriteLine("\t\t\t\t{0},", Tokenizer.EscapeString(location));
-                                    }
-                                    output.WriteLine("\t\t\t],");
-                                }
-                                output.WriteLine("\t\t},");
-                            }
-                            output.WriteLine("\t},");
-                        }
-                        output.WriteLine("},");
-                    }
-                    output.WriteLine("}");
+                    Json.Write(output, _allPhrases.Values);
                 }
                 else
                 {
-                    output.WriteLine("\nFinished: {0} strings found, {1} are unique\n", count, _allStrings.Count);
+                    output.WriteLine("\nFinished: {0} strings found, {1} are unique\n", count, _allPhrases.Count);
                 }
             }
             finally
