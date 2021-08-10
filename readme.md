@@ -253,6 +253,44 @@ person doing the translation work.
 ]
 ```
 
+## String Interpolation
+
+Unfortunately string interpolation isn't currently supported.
+
+eg: this won't work:
+
+```csharp
+$"Hello {name}".T()
+```
+
+instead, use this:
+
+```csharp
+string.Format("Hello {0}".T(), name)
+```
+
+## TranslateTool
+
+`TranslateTool` is a command line tool for working with JSON translation files.  It's installed as a dotnet global tool and includes the following commands.
+
+* `extract` - scans C# source code files to locate strings annotation with the 
+  `T()` extension method.
+* `update` - updates existing translation files with changes that were extracted
+  from the source code.
+* `translate` - performs machine translation of newly extracted strings.  Uses
+  Google Translate and requires an API key.
+* `list` - lists strings from a JSON file matching various conditions.
+* `trim` - trims a JSON file to remove anything that's not required at runtime.
+  Often translation files will include comments, locations and other settings 
+  used in the translation process or as hints to human translators.  This 
+  command removes that extraneous information for a more compact runtime only
+  file.
+* `convert` - converts an older JSON file format to the current format.
+
+For more information on using these commands, run:
+
+ `translatetool <commandname> --help`
+
 ## License
 
 Copyright © 2014-2021 Topten Software.  
