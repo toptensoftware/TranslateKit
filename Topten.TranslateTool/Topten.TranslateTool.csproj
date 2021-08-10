@@ -6,7 +6,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <PackAsTool>true</PackAsTool>
-    <ToolCommandName>translatekit</ToolCommandName>
+    <ToolCommandName>translatetool</ToolCommandName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -15,7 +15,7 @@
     <Copyright>Copyright © 2014-2021 Topten Software.  All Rights Reserved</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIcon>nuget-icon.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/toptensoftware/docsanity</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/toptensoftware/translatekit</PackageProjectUrl>
     <PackageTags>Translation, Translator</PackageTags>
     <Description>A simple .NET langauge translation utility.</Description>
     <RepositoryUrl>https://github.com/toptensoftware/translatekit</RepositoryUrl>
