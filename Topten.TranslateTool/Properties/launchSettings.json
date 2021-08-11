@@ -2,7 +2,7 @@
   "profiles": {
     "TranslateTool": {
       "commandName": "Project",
-      "commandLineArgs": "trim converted.json trimmed.json",
+      "commandLineArgs": "extract --t --json *.cs --out:extracted.json",
       "workingDirectory": "C:\\Users\\Brad\\Projects\\TranslateKit\\sandbox"
     }
   }

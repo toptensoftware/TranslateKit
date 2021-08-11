@@ -230,6 +230,10 @@ These comments will be included in the generated JSON file:
 ]
 ```
 
+If the same phrase (with the same context) is found with different comments a 
+warning will be generated and only the first encountered comment will be 
+included in the JSON file.
+
 ## Locations
 
 The generated JSON can also include a list of all the filenames where the string

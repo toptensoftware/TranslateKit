@@ -230,6 +230,20 @@ namespace TranslateTool
                             }
                             else
                             {
+                                if (!string.IsNullOrEmpty(s.Comment))
+                                {
+                                    if (string.IsNullOrEmpty(p.Comment))
+                                    {
+                                        p.Comment = s.Comment;
+                                    }
+                                    else
+                                    {
+                                        if (p.Comment != s.Comment)
+                                        {
+                                            Console.Error.Write($"Warning: different comments for '{p.Phrase}' ({p.Context}), ignoring '{p.Comment}'");
+                                        }
+                                    }
+                                }
                                 if (_jsonLocations)
                                     p.Locations.Add(location);
                             }

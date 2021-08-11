@@ -3,10 +3,7 @@
 		"phrase": "Hello World!",
 		"context": null,
 		"comment": null,
-		"locations": 
-		[
-			".\\Program.cs"
-		],
+		"locations": [],
 		"translation": null,
 		"machine": false
 	},
@@ -14,10 +11,7 @@
 		"phrase": "Block",
 		"context": "obstruct",
 		"comment": "as in \"obstruct\"",
-		"locations": 
-		[
-			".\\Program.cs"
-		],
+		"locations": [],
 		"translation": null,
 		"machine": false
 	},
@@ -25,10 +19,7 @@
 		"phrase": "Block",
 		"context": "cube",
 		"comment": "as in \"a brick\"",
-		"locations": 
-		[
-			".\\Program.cs"
-		],
+		"locations": [],
 		"translation": null,
 		"machine": false
 	}
