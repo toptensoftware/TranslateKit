@@ -1,26 +1,18 @@
 ﻿[
 	{
 		"phrase": "Hello World!",
-		"context": null,
-		"comment": null,
-		"locations": [],
-		"translation": null,
-		"machine": false
+		"translation": null
 	},
 	{
 		"phrase": "Block",
 		"context": "obstruct",
-		"comment": "as in \"obstruct\"",
-		"locations": [],
-		"translation": null,
-		"machine": false
+		"comment": "as in obstruct",
+		"translation": null
 	},
 	{
 		"phrase": "Block",
 		"context": "cube",
 		"comment": "as in \"a brick\"",
-		"locations": [],
-		"translation": null,
-		"machine": false
+		"translation": null
 	}
 ]

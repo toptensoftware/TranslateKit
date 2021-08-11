@@ -1,23 +1,13 @@
 [
 	{
 		"phrase": "Hello World!",
-		"context": null,
-		"comment": null,
-		"locations": 
-		[
-			".\\Program.cs"
-		],
 		"translation": "Bonjour le monde!",
 		"machine": true
 	},
 	{
 		"phrase": "Block",
 		"context": "obstruct",
-		"comment": "as in \"obstruct\"",
-		"locations": 
-		[
-			".\\Program.cs"
-		],
+		"comment": "as in obstruct",
 		"translation": "Bloquer",
 		"machine": true
 	},
@@ -25,10 +15,6 @@
 		"phrase": "Block",
 		"context": "cube",
 		"comment": "as in \"a brick\"",
-		"locations": 
-		[
-			".\\Program.cs"
-		],
 		"translation": "le Bloc",
 		"machine": true
 	}
