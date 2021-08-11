@@ -9,22 +9,44 @@ namespace TranslateTool
     public class PhraseInfo
     {
         [Json("phrase")]
-        public string Phrase;
+        public string Phrase { get; set; }
 
-        [Json("context")]
-        public string Context;
+        [Json("context", ExcludeIfNull = true)]
+        public string Context { get; set; }
 
-        [Json("comment")]
-        public string Comment;
+        [Json("comment", ExcludeIfNull = true)]
+        public string Comment { get; set; }
 
-        [Json("locations")]
+        [Json("locations", ExcludeIfNull = true)]
+        public List<string> Locations_null_check
+        {
+            get
+            {
+                if (Locations == null)
+                    return null;
+                if (Locations.Count == 0)
+                    return null;
+                return Locations;
+            }
+            set
+            {
+                Locations = value;
+            }
+        }
+
         public List<string> Locations;
 
         [Json("translation")]
-        public string Translation;
+        public string Translation { get; set; }
 
-        [Json("machine")]
-        public bool Machine;
+        [Json("machine", ExcludeIfNull = true)]
+        public bool? Machine_null_check
+        {
+            get => Machine == false ? null : true;
+            set => Machine = value.Value;
+        }
+
+        public bool Machine { get; set; }
 
     }
 }
