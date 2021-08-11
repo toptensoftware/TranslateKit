@@ -223,7 +223,7 @@ namespace TranslateTool
                                 p.Context = s.Context;
                                 p.Comment = s.Comment;
                                 p.Locations = new List<string>();
-                                if (_jsonLocations)
+                                if (_jsonLocations && !p.Locations.Contains(location))
                                     p.Locations.Add(location);
 
                                 _allPhrases.Add((p.Phrase, p.Context ?? ""), p);
@@ -244,7 +244,7 @@ namespace TranslateTool
                                         }
                                     }
                                 }
-                                if (_jsonLocations)
+                                if (_jsonLocations && !p.Locations.Contains(location))
                                     p.Locations.Add(location);
                             }
 
