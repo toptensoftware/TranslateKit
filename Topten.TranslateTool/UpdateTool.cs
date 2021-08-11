@@ -122,6 +122,7 @@ namespace TranslateTool
             foreach (var kv in updateTo)
             {
                 kv.Value.Locations = null;
+                kv.Value.Comment = null;
             }
 
             // Copy targets from source file
@@ -136,6 +137,7 @@ namespace TranslateTool
                 {
                     // Copy new locations
                     p.Locations = kv.Value.Locations;
+                    p.Comment = kv.Value.Comment;
                 }
                 else
                 {
