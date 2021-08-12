@@ -1,21 +1,21 @@
 [
 	{
 		"phrase": "Hello World!",
-		"translation": "Bonjour le monde!",
+		"translation": "Hej världen!",
 		"machine": true
 	},
 	{
 		"phrase": "Block",
 		"context": "obstruct",
 		"comment": "as in \"obstruct\"",
-		"translation": "Bloquer",
+		"translation": "Blockera",
 		"machine": true
 	},
 	{
 		"phrase": "Block",
 		"context": "cube",
 		"comment": "as in \"a brick\"",
-		"translation": "le Bloc",
+		"translation": "Blockera",
 		"machine": true
 	}
 ]
