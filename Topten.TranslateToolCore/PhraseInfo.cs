@@ -17,35 +17,13 @@ namespace TranslateTool
         [Json("comment", ExcludeIfNull = true)]
         public string Comment { get; set; }
 
-        [Json("locations", ExcludeIfNull = true)]
-        public List<string> Locations_null_check
-        {
-            get
-            {
-                if (Locations == null)
-                    return null;
-                if (Locations.Count == 0)
-                    return null;
-                return Locations;
-            }
-            set
-            {
-                Locations = value;
-            }
-        }
-
+        [Json("locations", ExcludeIfEmpty = true)]
         public List<string> Locations;
 
         [Json("translation")]
         public string Translation { get; set; }
 
-        [Json("machine", ExcludeIfNull = true)]
-        public bool? Machine_null_check
-        {
-            get => Machine == false ? null : true;
-            set => Machine = value.Value;
-        }
-
+        [Json("machine", ExcludeIfEquals = false)]
         public bool Machine { get; set; }
 
     }
