@@ -240,7 +240,7 @@ namespace TranslateTool
                                     {
                                         if (p.Comment != s.Comment)
                                         {
-                                            Console.Error.Write($"Warning: different comments for '{p.Phrase}' ({p.Context}), ignoring '{p.Comment}'");
+                                            Console.Error.WriteLine($"Warning: different comments for '{p.Phrase}' ({p.Context}), ignoring '{p.Comment}'");
                                         }
                                     }
                                 }
