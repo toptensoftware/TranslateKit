@@ -273,6 +273,31 @@ instead, use this:
 string.Format("Hello {0}".T(), name)
 ```
 
+## Using Regular Expressions
+
+Sometimes a code decoration like `.T()` can't be used to annotate the strings to be translated.  For example, the `.T()` extension
+method can't be used in C# attributes.
+
+Suppose for example the "Display Name" string needs to be translated:
+
+```
+[MyAttribute("id", "Display Name")]
+```
+
+You can use the --regex command line argument to extract strings based on a regular expression:
+
+```
+translatetool extract *.cs --regex:\\[MyAttribute\\(\\C\\s*,\\s*(\\C)
+```
+
+Notes:
+
+1. `\C` is a special token that matches a C# style string (in either "string" or @"rawstring" format)
+2. You can't extract contexts or comments using regex matching
+3. The escaping of regex patterns on the command line can depend on the shell you're using.  The above example
+   works using the standard Windows cmd.exe processor where double backslash (\\) is escaped to a single backslash (\)
+4. You can use multiple --regex args to match multiple string patterns.
+
 ## TranslateTool
 
 `TranslateTool` is a command line tool for working with JSON translation files.  It's installed as a dotnet global tool and includes the following commands.
