@@ -131,6 +131,7 @@ namespace TranslateTool
                 if (_char == '\"')
                 {
                     ParseRawString();
+                    return;
                 }
                 else
                 {
@@ -214,6 +215,7 @@ namespace TranslateTool
                     NextChar();
                     if (_char == '\"')
                     {
+                        _sb.Append(_char);
                         NextChar();
                         continue;
                     }

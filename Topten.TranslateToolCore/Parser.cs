@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace TranslateTool
@@ -43,7 +44,7 @@ namespace TranslateTool
         /// </summary>
         /// <param name="filename">The file to parse</param>
         /// <returns>An enumeration of ParsedStringInfo</returns>
-        public IEnumerable<ParsedPhrase> ParseFile(string filename)
+        public IEnumerable<ParsedPhrase> ParseFile(string filename, List<Regex> regex)
         {
             Tokenizer tokenizer;
             using (var streamReader = new StreamReader(filename))
@@ -78,6 +79,43 @@ namespace TranslateTool
                         }
                     }
                     tokenizer.NextToken();
+                }
+
+                if (regex != null && regex.Count > 0)
+                {
+                    LineNumbers ln = null;
+
+                    var fs = File.ReadAllText(filename);
+                    foreach (var r in regex)
+                    {
+                        foreach (Match m in r.Matches(fs))
+                        {
+                            if (m.Groups.Count > 1)
+                            {
+                                if (ln == null)
+                                    ln = new LineNumbers(fs);
+
+                                if (!ln.FromFileOffset(m.Groups[1].Index, out var lineNumber, out var _))
+                                    lineNumber = 0;
+
+                                var str = m.Groups[1].Value;
+                                if ((str.StartsWith("\"") || str.StartsWith("@\"")) && str.EndsWith("\""))
+                                {
+                                    var tk = new Tokenizer(new StringReader(str));
+                                    if (tk.Token == Token.String)
+                                    {
+                                        str = tk.String;
+                                    }
+                                }
+
+                                yield return new ParsedPhrase()
+                                {
+                                    Phrase = str,
+                                    LineNumber = lineNumber,
+                                };
+                            }
+                        }
+                    }
                 }
             }
 

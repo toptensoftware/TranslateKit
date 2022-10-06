@@ -4,8 +4,15 @@ using Topten.TranslateKit;
 
 namespace Sandbox
 {
+    class MyAttribute : Attribute
+    {
+        public MyAttribute(string a, string b)
+        {
+        }
+    }
     class Program
     {
+        [My("apples", @"Apples")]
         static void Main(string[] args)
         {
             // Work out where the strings file is

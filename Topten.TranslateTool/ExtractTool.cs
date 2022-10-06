@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Topten.JsonKit;
 
@@ -21,6 +22,7 @@ namespace TranslateTool
         bool _showHelp;
         bool _jsonLocations;
         string _outputFile;
+        List<Regex> _regex = new List<Regex>();
 
         /// <summary>
         /// Show command line help
@@ -33,6 +35,7 @@ namespace TranslateTool
             Console.WriteLine("Options:");
             Console.WriteLine("  --t           Extract translatable .T() strings");
             Console.WriteLine("  --nt          Extract non-translatable strings");
+            Console.WriteLine("  --regex:<rx>  Extract strings matching regex (use \\C to match C# style string)");
             Console.WriteLine("  --vs          Output strings in Visual Studio `filename(line): string` format");
             Console.WriteLine("  --json        Output in JSON format");
             Console.WriteLine("  --locations   Include locations in JSON output");
@@ -71,6 +74,10 @@ namespace TranslateTool
 
                     case "nt":
                         _nonTranslationStrings = true;
+                        break;
+
+                    case "regex":
+                        _regex.Add(new Regex(switchValue.Replace("\\C", @"(?:(?:""(?:\\""|.)*?"")|@""(?:""""|[^""])*"")")));
                         break;
 
                     case "json":
@@ -205,7 +212,7 @@ namespace TranslateTool
                             location = location.Substring(baseDir.Length);
                         }
 
-                        foreach (var s in parser.ParseFile(f))
+                        foreach (var s in parser.ParseFile(f, _regex))
                         {
 
                             // Write header if first string in file
